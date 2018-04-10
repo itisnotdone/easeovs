@@ -1,0 +1,137 @@
+region:
+  -
+    name: argn
+    domain: argn.org
+    mtu: 9000
+    fabric:
+      -
+        name: f01
+        network:
+          -
+            name: bm-switch
+            fake: true
+            vid: 10
+            cidr: 10.11.10.0/24
+            desc: baremetal switches
+          -
+            name: ipmi
+            fake: true
+            vid: 11
+            cidr: 10.11.11.0/24
+            desc: baremetal switches
+          -
+            name: bm-server
+            fake: false
+            vid: 12
+            cidr: 10.11.12.0/24
+            desc: baremetal servers / ceph-public
+          -
+            name: infra-svc
+            fake: true
+            vid: 13
+            cidr: 10.11.13.0/24
+            desc: infrastructural services that will be shipped on LXD and KVM(Libvirt) / ceph-public
+          -
+            name: k8s
+            fake: true
+            vid: 16
+            cidr: 10.11.16.0/22
+            desc: infrastructural services that will shipped on kubernetes / ceph-public
+          -
+            name: os-admin
+            fake: true
+            vid: 20
+            cidr: 10.11.20.0/24
+            desc: Openstack management and admin-api / ceph-public
+          -
+            name: os-public
+            fake: true
+            vid: 21
+            cidr: 10.11.21.0/24
+            desc: Openstack public-api
+          -
+            name: os-floating
+            fake: true
+            vid: 24
+            cidr: 10.11.24.0/24
+            desc: Openstack floating-ip / ceph-public
+          -
+            name: os-tunnel
+            fake: true
+            vid: 200
+            cidr: 192.168.200.0/24
+            desc: Openstack tunnel
+          -
+            name: ceph-cluster
+            fake: true
+            vid: 201
+            cidr: 192.168.201.0/24
+            desc: ceph cluster
+  -
+    name: brgn
+    domain: brgn.org
+    mtu: 9000
+    fabric:
+      -
+        name: f01
+        network:
+          -
+            name: bm-switch
+            fake: true
+            vid: 10
+            cidr: 10.11.10.0/24
+            desc: baremetal switches
+          -
+            name: ipmi
+            fake: true
+            vid: 11
+            cidr: 10.11.11.0/24
+            desc: baremetal switches
+          -
+            name: bm-server
+            fake: false
+            vid: 12
+            cidr: 10.11.12.0/24
+            desc: baremetal servers / ceph-public
+          -
+            name: infra-svc
+            fake: true
+            vid: 13
+            cidr: 10.11.13.0/24
+            desc: infrastructural services that will be shipped on LXD and KVM(Libvirt) / ceph-public
+          -
+            name: k8s
+            fake: true
+            vid: 16
+            cidr: 10.11.16.0/22
+            desc: infrastructural services that will shipped on kubernetes / ceph-public
+          -
+            name: os-admin
+            fake: true
+            vid: 20
+            cidr: 10.11.20.0/24
+            desc: Openstack management and admin-api / ceph-public
+          -
+            name: os-public
+            fake: true
+            vid: 21
+            cidr: 10.11.21.0/24
+            desc: Openstack public-api
+          -
+            name: os-floating
+            fake: true
+            vid: 24
+            cidr: 10.11.24.0/24
+            desc: Openstack floating-ip / ceph-public
+          -
+            name: os-tunnel
+            fake: true
+            vid: 200
+            cidr: 192.168.200.0/24
+            desc: Openstack tunnel
+          -
+            name: ceph-cluster
+            fake: true
+            vid: 201
+            cidr: 192.168.201.0/24
+            desc: ceph cluster
