@@ -1,113 +1,145 @@
 package main
 
 import (
-  "fmt"
-  "reflect"
+	"fmt"
+	"io/ioutil"
+	"strconv"
+	"strings"
+	//"reflect"
+	"github.com/davecgh/go-spew/spew"
 )
 
-type Subnets struct {
-  Type string
-}
-
-type Params struct {
-  BondMode string
-}
-
-type Config struct {
-  Type              string
-  Name              string
-  MacAddress        string
-  VlanLink          string
-  VlanID            int
-  Mtu               int
-  BondInterfaces    []string
-  Params            Params
-  BridgeInterfaces  []string
-  Address           []string
-  Search            []string
-  Destination       string
-  Gateway           string
-  Metric            int
-  Subnets           []Subnets
-}
+//	type Subnets struct {
+//		Type string
+//	}
+//
+//	type Params struct {
+//		BondMode string
+//	}
+//
+//	type Config struct {
+//		Type             string
+//		Name             string
+//		MacAddress       string
+//		VlanLink         string
+//		VlanID           int
+//		Mtu              int
+//		BondInterfaces   []string
+//		Params           Params
+//		BridgeInterfaces []string
+//		Address          []string
+//		Search           []string
+//		Destination      string
+//		Gateway          string
+//		Metric           int
+//		Subnets          []Subnets
+//	}
+//
+//	type Network struct {
+//		Version    int
+//		ConfigName string
+//		Config     []Config
+//	}
 
 type Network struct {
-  Version     int
-  ConfigName  string
-  Config      []Config
+	Version    int    `yaml:"version"`
+	ConfigName string `yaml:"config_name"`
+	Config     []struct {
+		Type           string   `yaml:"type"`
+		Name           string   `yaml:"name,omitempty"`
+		MacAddress     string   `yaml:"mac_address,omitempty"`
+		VlanLink       string   `yaml:"vlan_link,omitempty"`
+		VlanID         int      `yaml:"vlan_id,omitempty"`
+		Mtu            int      `yaml:"mtu,omitempty"`
+		BondInterfaces []string `yaml:"bond_interfaces,omitempty"`
+		Params         struct {
+			BondMode string `yaml:"bond-mode"`
+		} `yaml:"params,omitempty"`
+		BridgeInterfaces []string `yaml:"bridge_interfaces,omitempty"`
+		Address          []string `yaml:"address,omitempty"`
+		Search           []string `yaml:"search,omitempty"`
+		Destination      string   `yaml:"destination,omitempty"`
+		Gateway          string   `yaml:"gateway,omitempty"`
+		Metric           int      `yaml:"metric,omitempty"`
+		Subnets          []struct {
+			Type string `yaml:"type"`
+		} `yaml:"subnets,omitempty"`
+		ID string `yaml:"id,omitempty"`
+	} `yaml:"config"`
 }
 
-type NetworkConfig struct {
-  Network struct {
-	  Version int `yaml:"version"`
-	  ConfigName string `yaml:"config_name"`
-	  Config  []struct {
-	    Type           string   `yaml:"type"`
-	    Name           string   `yaml:"name,omitempty"`
-	    MacAddress     string   `yaml:"mac_address,omitempty"`
-	    VlanLink       string   `yaml:"vlan_link,omitempty"`
-	    VlanID         int      `yaml:"vlan_id,omitempty"`
-	    Mtu            int      `yaml:"mtu,omitempty"`
-	    BondInterfaces []string `yaml:"bond_interfaces,omitempty"`
-	    Params         struct {
-	      BondMode string `yaml:"bond-mode"`
-	    } `yaml:"params,omitempty"`
-	    BridgeInterfaces []string `yaml:"bridge_interfaces,omitempty"`
-	    Address          []string `yaml:"address,omitempty"`
-	    Search           []string `yaml:"search,omitempty"`
-	    Destination      string   `yaml:"destination,omitempty"`
-	    Gateway          string   `yaml:"gateway,omitempty"`
-	    Metric           int      `yaml:"metric,omitempty"`
-	    Subnets          []struct {
-	      Type string `yaml:"type"`
-	    } `yaml:"subnets,omitempty"`
-	    ID string `yaml:"id,omitempty"`
-	  } `yaml:"config"`
-  } `yaml:"network"`
-}
+func createNetworkConfig(vn VirtualNetwork, hostId int) {
 
-func createNetworkConfigObject(vn VirtualNetwork) []Network {
-  //ncs := []Network{}
-  //var nc Network
+	// How to initialize nested struct
+	// https://stackoverflow.com/questions/24809235/initialize-a-nested-struct-in-golang
+	// https://stackoverflow.com/questions/26866879/initialize-nested-struct-definition-in-golang/26867130
+	// https://medium.com/@xcoulon/nested-structs-in-golang-2c750403a007
 
-  ncs := make([]map[string]interface)
-  nc := make(map[string]interface)
+	fmt.Println()
+	spew.Dump()
 
-  for i, rgn := range vn.Region {
-    //fmt.Println("region index:", i)
-    //fmt.Println("region data:", rgn)
-    fmt.Println(reflect.TypeOf(i))
+	var ns string
 
-    for ii, fab := range rgn.Fabric {
-      // There will be one config file per a region
-      fmt.Println(reflect.TypeOf(ii))
+	if vn.Region != nil {
+		for i, rgn := range vn.Region {
+			ns = "network:\n"
+			ns = ns + "  " + "version: 1\n"
+			ns = ns + "  " + "config_name: " + rgn.Name + "\n"
 
-      //nc = Network{Version: 1, ConfigName: rgn.Name + "-" + fab.Name}
-      nc = map[string]string{
-        "Version": 1,
-        "ConfigName": rgn.Name + "-" + fab.Name,
-      }
+			if rgn.Fabric != nil {
+				ns = ns + "  " + "config:\n"
+				for ii, fab := range rgn.Fabric {
+					// There will be one config file per a region
+					for _, net := range fab.Network {
+						if net.Fake {
+							ns = ns + "    " + "- type: vlan\n"
+							ns = ns +
+								"    " +
+								"  name: ech" +
+								strconv.Itoa(ii) +
+								"." +
+								strconv.Itoa(net.Vid) +
+								"\n"
+							ns = ns +
+								"    " +
+								"  vlan_link: ech" +
+								strconv.Itoa(ii) +
+								"\n"
+							ns = ns +
+								"    " +
+								"  vlan_id: " +
+								strconv.Itoa(net.Vid) +
+								"\n"
+						} else {
+							ns = ns + "    " + "- type: physical\n"
+							ns = ns + "    " + "  name: ech" + strconv.Itoa(ii) + "\n"
+						}
+						ns = ns + "    " + "  mtu: " + strconv.Itoa(rgn.Mtu) + "\n"
+						ns = ns + "    " + "  subnets:\n"
+						ns = ns + "        " + "- type: static\n"
+						cidr := strings.Split(net.Cidr, "/")
+						octets := strings.Split(cidr[0], ".")
+						netid := octets[0] + "." + octets[1] + "." + octets[2]
+						ns = ns +
+							"        " +
+							"  address: " +
+							netid +
+							"." +
+							strconv.Itoa(hostId) +
+							"/" +
+							cidr[1] +
+							"\n"
+						ns = ns + "        " + "  gateway: " + netid + ".1\n"
 
-      //fmt.Println("fabric index:", ii)
-      //fmt.Println("fabric data:", fab)
-
-      for iii, net := range fab.Network {
-        fmt.Println(reflect.TypeOf(iii), reflect.TypeOf(net))
-        //fmt.Println("network index:", iii)
-        //fmt.Println("network data:", net)
-      }
-
-      //structToYaml(nc)
-      mapToYaml(nc)
-      ncs = append(ncs, nc)
-    }
-    fmt.Println()
-  }
-
-  fmt.Printf("ncs:\n%#v", ncs)
-
-  return ncs
-}
-
-func generateNetConf(ncs []NetworkConfig, hostId int) {
+					} // net
+				} // fab
+			}
+			ns = ns + "    " + "- type: nameserver\n"
+			ns = ns + "    " + "  address:\n"
+			ns = ns + "        " + "- 8.8.8.8\n"
+			fmt.Println("===============>> network_config " + strconv.Itoa(i+1))
+			fmt.Println(ns)
+			ioutil.WriteFile(rgn.Name+".yml", []byte(ns), 0644)
+		} // rgn
+	}
 }
