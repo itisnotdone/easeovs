@@ -79,8 +79,9 @@ func main() {
 			},
 			Action: func(c *cli.Context) error {
 				vn := createVirtualNetworkObject(yamlFile)
-				//fmt.Println("vn:", vn)
-				createNetworkConfig(vn, hostId)
+				//createNetworkConfigWithString(vn, hostId)
+				createNetworkConfigWithMap(vn, hostId)
+				//mainOfTranslate()
 				return nil
 			},
 		},

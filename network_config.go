@@ -68,15 +68,39 @@ type Network struct {
 	} `yaml:"config"`
 }
 
-func createNetworkConfig(vn VirtualNetwork, hostId int) {
+func createNetworkConfigWithMap(vn VirtualNetwork, hostId int) {
+	ns := make(map[string]map[string]string)
+	ns["network"] = make(map[string]string)
+
+	if vn.Region != nil {
+
+		for _, rgn := range vn.Region {
+			if rgn.Fabric != nil {
+				for _, fab := range rgn.Fabric {
+					// There will be one config file per a region
+					for _, net := range fab.Network {
+						if net.Fake {
+						} else {
+						}
+					} // net
+				} // fab
+			}
+			spew.Dump(ns)
+			fmt.Println(ns)
+		} // rgn
+
+	}
+}
+
+func createNetworkConfigWithString(vn VirtualNetwork, hostId int) {
 
 	// How to initialize nested struct
 	// https://stackoverflow.com/questions/24809235/initialize-a-nested-struct-in-golang
 	// https://stackoverflow.com/questions/26866879/initialize-nested-struct-definition-in-golang/26867130
 	// https://medium.com/@xcoulon/nested-structs-in-golang-2c750403a007
+	// https://gist.github.com/hvoecking/10772475
 
 	fmt.Println()
-	spew.Dump()
 
 	var ns string
 
