@@ -69,11 +69,38 @@ type Network struct {
 }
 
 func createNetworkConfigWithMap(vn VirtualNetwork, hostId int) {
-	ns := make(map[string]map[string]string)
-	ns["network"] = make(map[string]string)
+	// have problem initializing nested map
+	var networks []map[string]interface{}
+	network := map[string]interface{}{}
+	network["network"] = map[string]interface{}{}
 
 	if vn.Region != nil {
+		for _, rgn := range vn.Region {
 
+			if rgn.Fabric != nil {
+				for _, fab := range rgn.Fabric {
+					// There will be one config file per a region
+					for _, net := range fab.Network {
+						if net.Fake {
+						} else {
+						}
+					} // net
+				} // fab
+			}
+			networks = append(networks, network)
+		} // rgn
+
+	}
+	spew.Dump(networks)
+	fmt.Println()
+	for _, net := range networks {
+		mapToYaml(net)
+	}
+}
+
+func createNetworkConfigWithStruct(vn VirtualNetwork, hostId int) {
+	// have problem initializing nested struct
+	if vn.Region != nil {
 		for _, rgn := range vn.Region {
 			if rgn.Fabric != nil {
 				for _, fab := range rgn.Fabric {
@@ -85,8 +112,6 @@ func createNetworkConfigWithMap(vn VirtualNetwork, hostId int) {
 					} // net
 				} // fab
 			}
-			spew.Dump(ns)
-			fmt.Println(ns)
 		} // rgn
 
 	}
