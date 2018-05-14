@@ -1,3 +1,6 @@
+# 18 bits network id per a region
+# add '1' in front of every VIDs to avoid using '0' VID
+#
 region:
   -
     name: argn
@@ -11,61 +14,61 @@ region:
             name: bm-switch
             fake: true
             vid: 10
-            cidr: 10.11.10.0/24
+            cidr: 172.16.0.0/24
             desc: baremetal switches
           -
             name: ipmi
             fake: true
             vid: 11
-            cidr: 10.11.11.0/24
+            cidr: 172.16.1.0/24
             desc: baremetal switches
           -
             name: bm-server
             fake: false
             vid: 12
-            cidr: 10.11.12.0/24
+            cidr: 172.16.2.0/24
             desc: baremetal servers / ceph-public
           -
             name: infra-svc
             fake: true
             vid: 13
-            cidr: 10.11.13.0/24
+            cidr: 172.16.3.0/24
             desc: infrastructural services that will be shipped on LXD and KVM(Libvirt) / ceph-public
           -
             name: k8s
             fake: true
-            vid: 16
-            cidr: 10.11.16.0/22
+            vid: 14
+            cidr: 172.16.4.0/22
             desc: infrastructural services that will shipped on kubernetes / ceph-public
           -
             name: os-admin
             fake: true
-            vid: 20
-            cidr: 10.11.20.0/24
+            vid: 18
+            cidr: 172.16.8.0/24
             desc: Openstack management and admin-api / ceph-public
           -
             name: os-public
             fake: true
-            vid: 21
-            cidr: 10.11.21.0/24
+            vid: 19
+            cidr: 172.16.9.0/24
             desc: Openstack public-api
           -
             name: os-floating
             fake: true
-            vid: 24
-            cidr: 10.11.24.0/24
+            vid: 116
+            cidr: 172.16.16.0/21
             desc: Openstack floating-ip / ceph-public
           -
             name: os-tunnel
             fake: true
-            vid: 200
-            cidr: 192.168.200.0/24
+            vid: 1100
+            cidr: 192.168.100.0/24
             desc: Openstack tunnel
           -
             name: ceph-cluster
             fake: true
-            vid: 201
-            cidr: 192.168.201.0/24
+            vid: 1101
+            cidr: 192.168.101.0/24
             desc: ceph cluster
   -
     name: brgn
@@ -78,60 +81,60 @@ region:
           -
             name: bm-switch
             fake: true
-            vid: 10
-            cidr: 10.11.10.0/24
+            vid: 164
+            cidr: 172.16.64.0/24
             desc: baremetal switches
           -
             name: ipmi
             fake: true
-            vid: 11
-            cidr: 10.11.11.0/24
+            vid: 165
+            cidr: 172.16.65.0/24
             desc: baremetal switches
           -
             name: bm-server
             fake: false
-            vid: 12
-            cidr: 10.11.12.0/24
+            vid: 166
+            cidr: 172.16.66.0/24
             desc: baremetal servers / ceph-public
           -
             name: infra-svc
             fake: true
-            vid: 13
-            cidr: 10.11.13.0/24
+            vid: 167
+            cidr: 172.16.67.0/24
             desc: infrastructural services that will be shipped on LXD and KVM(Libvirt) / ceph-public
           -
             name: k8s
             fake: true
-            vid: 16
-            cidr: 10.11.16.0/22
+            vid: 168
+            cidr: 172.16.68.0/22
             desc: infrastructural services that will shipped on kubernetes / ceph-public
           -
             name: os-admin
             fake: true
-            vid: 20
-            cidr: 10.11.20.0/24
+            vid: 172
+            cidr: 172.16.72.0/24
             desc: Openstack management and admin-api / ceph-public
           -
             name: os-public
             fake: true
-            vid: 21
-            cidr: 10.11.21.0/24
+            vid: 173
+            cidr: 172.16.73.0/24
             desc: Openstack public-api
           -
             name: os-floating
             fake: true
-            vid: 24
-            cidr: 10.11.24.0/24
+            vid: 180
+            cidr: 172.16.80.0/21
             desc: Openstack floating-ip / ceph-public
           -
             name: os-tunnel
             fake: true
-            vid: 200
+            vid: 1200
             cidr: 192.168.200.0/24
             desc: Openstack tunnel
           -
             name: ceph-cluster
             fake: true
-            vid: 201
+            vid: 1201
             cidr: 192.168.201.0/24
             desc: ceph cluster

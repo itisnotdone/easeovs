@@ -21,8 +21,18 @@ func main() {
 
 	app.Commands = []cli.Command{
 		{
-			Name:  "create",
-			Usage: "create networks as defined",
+			Name: "clean",
+			Usage: `clean garbage ports shown in the result of 'ovs-vsctl show'.
+              Note that this will only work on veth and vnet type ports.`,
+			Action: func(c *cli.Context) error {
+				clean()
+				return nil
+			},
+		},
+		{
+			Name: "create",
+			Usage: `create networks and gateways as defined.
+              Note that this command needs sudo privilege.`,
 			Flags: []cli.Flag{
 				cli.StringFlag{
 					Name:        "config, c",
@@ -37,8 +47,9 @@ func main() {
 			},
 		},
 		{
-			Name:  "destroy",
-			Usage: "destroy networks as defined",
+			Name: "destroy",
+			Usage: `destroy networks and gateways as defined.
+              Note that this command needs sudo privilege.`,
 			Flags: []cli.Flag{
 				cli.StringFlag{
 					Name:        "config, c",
@@ -53,18 +64,8 @@ func main() {
 			},
 		},
 		{
-			Name: "clean",
-			Usage: `clean garbage ports shown in the result of 'ovs-vsctl show'.
-              Note that this will only work on veth and vnet type ports.`,
-			Action: func(c *cli.Context) error {
-				clean()
-				return nil
-			},
-		},
-		{
-			Name: "generate",
-			Usage: "generate network configuration in cloud-init v1 format " +
-				"for network interfaces of MAAS",
+			Name:  "generate",
+			Usage: "generate network configuration for MAAS in cloud-init v1 format",
 			Flags: []cli.Flag{
 				cli.StringFlag{
 					Name:        "config, c",

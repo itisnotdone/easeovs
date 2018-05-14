@@ -100,6 +100,13 @@ func createNetworkConfigWithMap(vn VirtualNetwork, hostId int) {
 
 func createNetworkConfigWithStruct(vn VirtualNetwork, hostId int) {
 	// have problem initializing nested struct
+
+	// How to initialize nested struct
+	// https://stackoverflow.com/questions/24809235/initialize-a-nested-struct-in-golang
+	// https://stackoverflow.com/questions/26866879/initialize-nested-struct-definition-in-golang/26867130
+	// https://medium.com/@xcoulon/nested-structs-in-golang-2c750403a007
+	// https://gist.github.com/hvoecking/10772475
+
 	if vn.Region != nil {
 		for _, rgn := range vn.Region {
 			if rgn.Fabric != nil {
@@ -119,15 +126,10 @@ func createNetworkConfigWithStruct(vn VirtualNetwork, hostId int) {
 
 func createNetworkConfigWithString(vn VirtualNetwork, hostId int) {
 
-	// How to initialize nested struct
-	// https://stackoverflow.com/questions/24809235/initialize-a-nested-struct-in-golang
-	// https://stackoverflow.com/questions/26866879/initialize-nested-struct-definition-in-golang/26867130
-	// https://medium.com/@xcoulon/nested-structs-in-golang-2c750403a007
-	// https://gist.github.com/hvoecking/10772475
-
 	fmt.Println()
 
 	var ns string
+	var dev string
 
 	if vn.Region != nil {
 		for i, rgn := range vn.Region {
@@ -137,9 +139,11 @@ func createNetworkConfigWithString(vn VirtualNetwork, hostId int) {
 
 			if rgn.Fabric != nil {
 				ns = ns + "  " + "config:\n"
+				dev = "devices:\n"
 				for ii, fab := range rgn.Fabric {
 					// There will be one config file per a region
 					for _, net := range fab.Network {
+
 						if net.Fake {
 							ns = ns + "    " + "- type: vlan\n"
 							ns = ns +
@@ -178,17 +182,32 @@ func createNetworkConfigWithString(vn VirtualNetwork, hostId int) {
 							"/" +
 							cidr[1] +
 							"\n"
-						ns = ns + "        " + "  gateway: " + netid + ".1\n"
+						if !net.Fake {
+							ns = ns + "        " + "  gateway: " + netid + ".1\n"
+						}
 
 					} // net
+
+					dev = dev + "  " + "eth" + strconv.Itoa(ii) + ":\n"
+					dev = dev + "    " + "mtu: " + strconv.Itoa(rgn.Mtu) + "\n"
+					dev = dev + "    " + "name: eth" + strconv.Itoa(ii) + "\n"
+					dev = dev + "    " + "nictype: bridged\n"
+					dev = dev + "    " + "parent: " + rgn.Name + "-" + fab.Name + "\n"
+					dev = dev + "    " + "type: nic\n"
 				} // fab
 			}
 			ns = ns + "    " + "- type: nameserver\n"
 			ns = ns + "    " + "  address:\n"
 			ns = ns + "        " + "- 8.8.8.8\n"
+
+			fmt.Println("===============>> device_config " + strconv.Itoa(i+1))
+			fmt.Println(dev)
+			ioutil.WriteFile("device_"+rgn.Name+".yml", []byte(dev), 0644)
+
 			fmt.Println("===============>> network_config " + strconv.Itoa(i+1))
 			fmt.Println(ns)
-			ioutil.WriteFile(rgn.Name+".yml", []byte(ns), 0644)
+			ioutil.WriteFile("network_"+rgn.Name+".yml", []byte(ns), 0644)
+
 		} // rgn
 	}
 }
