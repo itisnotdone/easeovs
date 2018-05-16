@@ -39,7 +39,11 @@ GLOBAL OPTIONS:
 
 
 # to create
-sudo easeovs create --config src/github.com/itisnotdone/easeovs/sample.yml
+
+# Make sure that you have following line in your /etc/network/interfaces file.
+source /etc/network/interfaces.d/*.cfg
+
+$ sudo easeovs create --config src/github.com/itisnotdone/easeovs/sample.yml
 ovs-vsctl add-br argn-f01
 ovs-vsctl add-br argn-f01-10 argn-f01 10
 ===============>> network_config for bm-switch
@@ -122,7 +126,7 @@ Generating /etc/network/interfaces.d/brgn-f01-1201.cfg
 ifup brgn-f01-1201
 
 # to destroy
-sudo easeovs destroy --config ~/go/src/github.com/itisnotdone/easeovs/sample.yml
+$ sudo easeovs destroy --config ~/go/src/github.com/itisnotdone/easeovs/sample.yml
 ifdown argn-f01-10
 ovs-vsctl del-br argn-f01-10
 Removing /etc/network/interfaces.d/argn-f01-10.cfg
@@ -190,6 +194,12 @@ find . -maxdepth 1 -name "*.yml"
 ./device_argn.yml
 ./device_brgn.yml
 ./network_brgn.yml
+```
+
+## sudo command with GOBIN
+Add $GOBIN path at the end of following line in /etc/sudoers file.
+```bash
+Defaults        secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/home/ubuntu/go/bin"
 ```
 
 ## Reference

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strconv"
 	"strings"
 	//"reflect"
@@ -128,6 +129,7 @@ func createNetworkConfigWithString(vn VirtualNetwork, hostId int) {
 
 	fmt.Println()
 
+	var err error
 	var ns string
 	var dev string
 
@@ -148,14 +150,14 @@ func createNetworkConfigWithString(vn VirtualNetwork, hostId int) {
 							ns = ns + "    " + "- type: vlan\n"
 							ns = ns +
 								"    " +
-								"  name: ech" +
+								"  name: eth" +
 								strconv.Itoa(ii) +
 								"." +
 								strconv.Itoa(net.Vid) +
 								"\n"
 							ns = ns +
 								"    " +
-								"  vlan_link: ech" +
+								"  vlan_link: eth" +
 								strconv.Itoa(ii) +
 								"\n"
 							ns = ns +
@@ -165,9 +167,10 @@ func createNetworkConfigWithString(vn VirtualNetwork, hostId int) {
 								"\n"
 						} else {
 							ns = ns + "    " + "- type: physical\n"
-							ns = ns + "    " + "  name: ech" + strconv.Itoa(ii) + "\n"
+							ns = ns + "    " + "  name: eth" + strconv.Itoa(ii) + "\n"
 						}
-						ns = ns + "    " + "  mtu: " + strconv.Itoa(rgn.Mtu) + "\n"
+						// ns = ns + "    " + "  mtu: " + strconv.Itoa(rgn.Mtu) + "\n"
+
 						ns = ns + "    " + "  subnets:\n"
 						ns = ns + "        " + "- type: static\n"
 						cidr := strings.Split(net.Cidr, "/")
@@ -200,13 +203,28 @@ func createNetworkConfigWithString(vn VirtualNetwork, hostId int) {
 			ns = ns + "    " + "  address:\n"
 			ns = ns + "        " + "- 8.8.8.8\n"
 
+			//	fmt.Println("===============>> device_config " + strconv.Itoa(i+1))
+			//	fmt.Println(dev)
+			//	ioutil.WriteFile("device_"+rgn.Name+".yml", []byte(dev), 0644)
+
 			fmt.Println("===============>> device_config " + strconv.Itoa(i+1))
 			fmt.Println(dev)
-			ioutil.WriteFile("device_"+rgn.Name+".yml", []byte(dev), 0644)
+			ioutil.WriteFile("network_"+rgn.Name+".yml", []byte(dev), 0644)
 
 			fmt.Println("===============>> network_config " + strconv.Itoa(i+1))
 			fmt.Println(ns)
-			ioutil.WriteFile("network_"+rgn.Name+".yml", []byte(ns), 0644)
+
+			//ioutil.WriteFile("network_"+rgn.Name+".yml", []byte(ns), 0644)
+			file, fileerr := os.OpenFile("network_"+rgn.Name+".yml",
+				os.O_APPEND|os.O_WRONLY,
+				0644)
+			if fileerr != nil {
+				panic(err)
+			}
+			defer file.Close()
+			if _, err = file.WriteString(ns); err != nil {
+				panic(err)
+			}
 
 		} // rgn
 	}
