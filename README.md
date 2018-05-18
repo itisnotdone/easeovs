@@ -38,10 +38,10 @@ GLOBAL OPTIONS:
    --version, -v  print the version
 
 
-# to create
-
 # Make sure that you have following line in your /etc/network/interfaces file.
 source /etc/network/interfaces.d/*.cfg
+
+# to create
 
 $ sudo easeovs create --config src/github.com/itisnotdone/easeovs/sample.yml
 ovs-vsctl add-br argn-f01
@@ -126,6 +126,7 @@ Generating /etc/network/interfaces.d/brgn-f01-1201.cfg
 ifup brgn-f01-1201
 
 # to destroy
+
 $ sudo easeovs destroy --config ~/go/src/github.com/itisnotdone/easeovs/sample.yml
 ifdown argn-f01-10
 ovs-vsctl del-br argn-f01-10
@@ -188,11 +189,10 @@ ifdown brgn-f01
 ovs-vsctl del-br brgn-f01
 Removing /etc/network/interfaces.d/brgn-f01.cfg
 
+# to generate
 easeovs generate --config /home/ubuntu/go/src/github.com/itisnotdone/easeovs/sample.yml --host-id 2
 find . -maxdepth 1 -name "*.yml"
 ./network_argn.yml
-./device_argn.yml
-./device_brgn.yml
 ./network_brgn.yml
 ```
 
