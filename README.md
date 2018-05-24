@@ -41,9 +41,9 @@ GLOBAL OPTIONS:
 # Make sure that you have following line in your /etc/network/interfaces file.
 source /etc/network/interfaces.d/*.cfg
 
-# to create
+# to build virtual network as defined
 
-$ sudo easeovs create --config src/github.com/itisnotdone/easeovs/sample.yml
+$ sudo easeovs create --config src/github.com/itisnotdone/easeovs/template/multiple_region.yml
 ovs-vsctl add-br argn-f01
 ovs-vsctl add-br argn-f01-10 argn-f01 10
 ===============>> network_config for bm-switch
@@ -125,9 +125,9 @@ ovs-vsctl add-br brgn-f01-1201 brgn-f01 1201
 Generating /etc/network/interfaces.d/brgn-f01-1201.cfg
 ifup brgn-f01-1201
 
-# to destroy
+# to destroy the virtual network
 
-$ sudo easeovs destroy --config ~/go/src/github.com/itisnotdone/easeovs/sample.yml
+$ sudo easeovs destroy --config ~/go/src/github.com/itisnotdone/easeovs/template/multiple_region.yml
 ifdown argn-f01-10
 ovs-vsctl del-br argn-f01-10
 Removing /etc/network/interfaces.d/argn-f01-10.cfg
@@ -189,8 +189,8 @@ ifdown brgn-f01
 ovs-vsctl del-br brgn-f01
 Removing /etc/network/interfaces.d/brgn-f01.cfg
 
-# to generate
-easeovs generate --config /home/ubuntu/go/src/github.com/itisnotdone/easeovs/sample.yml --host-id 2
+# to generate network and device configuration for MAAS container
+easeovs generate --config /home/ubuntu/go/src/github.com/itisnotdone/easeovs/template/multiple_region.yml --host-id 2
 find . -maxdepth 1 -name "*.yml"
 ./network_argn.yml
 ./network_brgn.yml
