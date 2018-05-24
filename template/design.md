@@ -1,7 +1,5 @@
 # Base network block
-17 bits network block per a region
-18 bits network block per a fabric
-i.e.,
+17 bits network block per a region and 18 bits network block per a fabric
 - 1st region: 172.30.0.0/17
   - 1st fabric in 1st region: 172.30.0.0/18
   - 2nd fabric in 1st region: 172.30.64.0/18
@@ -10,8 +8,8 @@ i.e.,
   - 2nd fabric in 2nd region: 172.30.192.0/18
 
 # Base network ID
-Public VLANs: 172.30
-Private VLANs: 172.31
+- Public VLANs: 172.30
+- Private VLANs: 172.31
 
 # VID definition for public VLANs
 - For the 1st fabric in the 1st region, 10 will be added to the 3rd octet of their network ID. i.e. 172.30.0.0 will have VID 10.
