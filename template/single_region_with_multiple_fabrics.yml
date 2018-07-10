@@ -1,5 +1,30 @@
 region:
   -
+    name: default
+    domain: default.dev
+    mtu: 9000
+    fabric:
+      -
+        name: f01
+        network:
+          -
+            name: default
+            fake: false
+            vid: 1000
+            cidr: 172.31.0.0/24
+            desc: default
+            ipranges:
+              -
+                type: dynamic
+                start: 172.31.0.201
+                end: 172.31.0.254
+                comment: for some purpose
+              -
+                type: reserved
+                start: 172.31.0.1
+                end: 172.31.0.10
+                comment: for some purpose
+  -
     name: argn
     domain: argn.org
     mtu: 9000
@@ -59,13 +84,13 @@ region:
             name: os-tunnel
             fake: true
             vid: 800
-            cidr: 172.31.0.0/24
+            cidr: 192.168.0.0/24
             desc: Openstack tunnel
           -
             name: ceph-cluster
             fake: true
             vid: 801
-            cidr: 172.31.1.0/24
+            cidr: 192.168.1.0/24
             desc: ceph cluster
       -
         name: f02
@@ -122,11 +147,11 @@ region:
             name: os-tunnel
             fake: true
             vid: 864
-            cidr: 172.31.64.0/24
+            cidr: 192.168.64.0/24
             desc: Openstack tunnel
           -
             name: ceph-cluster
             fake: true
             vid: 865
-            cidr: 172.31.65.0/24
+            cidr: 192.168.65.0/24
             desc: ceph cluster

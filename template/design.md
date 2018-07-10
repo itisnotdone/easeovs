@@ -1,15 +1,16 @@
-# Base network block
-17 bits network block per a region and 18 bits network block per a fabric
-- 1st region: 172.30.0.0/17
-  - 1st fabric in 1st region: 172.30.0.0/18
-  - 2nd fabric in 1st region: 172.30.64.0/18
-- 2nd region: 172.30.128.0/17
-  - 1st fabric in 2nd region: 172.30.128.0/18
-  - 2nd fabric in 2nd region: 172.30.192.0/18
+# Public Network Block
+- Use 172.16.0.0/12, 172.16.0.0 - 172.31.255.255
+- 17 bits network block per a region and 18 bits network block per a fabric
+- aregion.dev: 172.30.0.0/17
+  - 1st fabric in aregion: 172.30.0.0/18
+  - 2nd fabric in aregion: 172.30.64.0/18
+- bregion.dev: 172.30.128.0/17
+  - 1st fabric in bregion: 172.30.128.0/18
+  - 2nd fabric in bregion: 172.30.192.0/18
+- default.dev: 172.31.0.0/24
 
-# Base network ID
-- Public VLANs: 172.30
-- Private VLANs: 172.31
+# Private Network Block
+- Use 192.168.0.0/16, 192.168.0.0 - 192.168.255.255
 
 # VID definition for public VLANs
 - For the 1st fabric in the 1st region, 10 will be added to the 3rd octet of their network ID. i.e. 172.30.0.0 will have VID 10.

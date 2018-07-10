@@ -1,5 +1,5 @@
 # easeovs
-Will get you Openvswitch as you defined within a YAML file.
+Will get you Openvswitch as you define within a YAML file.
 
 ## Installation
 ```bash
