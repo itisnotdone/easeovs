@@ -132,6 +132,7 @@ func createNetworkConfigWithString(vn VirtualNetwork, hostId int) {
 	var err error
 	var ns string
 	var dev string
+	var net_xml string
 
 	if vn.Region != nil {
 		for i, rgn := range vn.Region {
@@ -144,9 +145,20 @@ func createNetworkConfigWithString(vn VirtualNetwork, hostId int) {
 				dev = "devices:\n"
 				for ii, fab := range rgn.Fabric {
 					// There will be one config file per a region
+          net_xml = "<network>\n"
+          net_xml = net_xml + "  " + "<name>" + rgn.Name + "-" + fab.Name + "</name>\n"
+          net_xml = net_xml + "  " + "<forward mode='bridge'/>\n"
+          net_xml = net_xml + "  " + "<bridge name='" + rgn.Name + "-" + fab.Name + "'/>\n"
+          net_xml = net_xml + "  " + "<virtualport type='openvswitch'/>\n"
 					for _, net := range fab.Network {
 
 						if net.Fake {
+              net_xml = net_xml + "  " + "<portgroup name='" + rgn.Name + "-" + fab.Name + "-" + strconv.Itoa(net.Vid) + "'>\n"
+              net_xml = net_xml + "  " + "  " + "<vlan>\n"
+              net_xml = net_xml + "  " + "  " + "  " + "<tag id='" + strconv.Itoa(net.Vid) + "'/>\n"
+              net_xml = net_xml + "  " + "  " + "</vlan>\n"
+              net_xml = net_xml + "  " + "</portgroup>\n"
+
 							ns = ns + "    " + "- type: vlan\n"
 							ns = ns +
 								"    " +
@@ -197,27 +209,29 @@ func createNetworkConfigWithString(vn VirtualNetwork, hostId int) {
 					dev = dev + "    " + "nictype: bridged\n"
 					dev = dev + "    " + "parent: " + rgn.Name + "-" + fab.Name + "\n"
 					dev = dev + "    " + "type: nic\n"
+
+          net_xml = net_xml + "  " + "<portgroup name='" + rgn.Name + "-" + fab.Name + "'>\n"
+          net_xml = net_xml + "  " + "</portgroup>\n"
+          net_xml = net_xml + "</network>\n"
+
+			    fmt.Println("===============>> xml_config for " + fab.Name)
+			    fmt.Println(net_xml)
+			    ioutil.WriteFile("virsh_net_" + rgn.Name + "_" + fab.Name + ".xml", []byte(net_xml), 0640)
 				} // fab
 			}
 			ns = ns + "    " + "- type: nameserver\n"
 			ns = ns + "    " + "  address:\n"
 			ns = ns + "        " + "- 8.8.8.8\n"
 
-			//	fmt.Println("===============>> device_config " + strconv.Itoa(i+1))
-			//	fmt.Println(dev)
-			//	ioutil.WriteFile("device_"+rgn.Name+".yml", []byte(dev), 0644)
-
 			fmt.Println("===============>> device_config " + strconv.Itoa(i+1))
 			fmt.Println(dev)
-			ioutil.WriteFile("network_"+rgn.Name+".yml", []byte(dev), 0644)
+			ioutil.WriteFile("cloudinit_net_"+rgn.Name+".yml", []byte(dev), 0640)
 
 			fmt.Println("===============>> network_config " + strconv.Itoa(i+1))
 			fmt.Println(ns)
-
-			//ioutil.WriteFile("network_"+rgn.Name+".yml", []byte(ns), 0644)
-			file, fileerr := os.OpenFile("network_"+rgn.Name+".yml",
+			file, fileerr := os.OpenFile("cloudinit_net_"+rgn.Name+".yml",
 				os.O_APPEND|os.O_WRONLY,
-				0644)
+				0640)
 			if fileerr != nil {
 				panic(err)
 			}
