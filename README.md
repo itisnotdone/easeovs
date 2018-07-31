@@ -11,6 +11,18 @@ go get github.com/itisnotdone/easeovs
 - Run 'create' command to create virtual networks and gateways
 - Run 'generate' command to create network and device configurations for MAAS
 
+## Requirments
+
+### /etc/network/interfaces
+has to contain `source /etc/network/interfaces.d/*.cfg` to be able to recognize more network configurations.
+
+### /etc/sudoers
+`Defaults  secure_path` has to contains $GOBIN which is $GOPATH/bin. Following script might help you out.
+```bash
+sudo sed -i "s \(.*secure_path=.*\)\" \1:$HOME/go/bin\" " /etc/sudoers
+```
+
+
 ## Usage
 ```bash
 easeovs 
@@ -42,164 +54,16 @@ GLOBAL OPTIONS:
 source /etc/network/interfaces.d/*.cfg
 
 # to build virtual network as defined
-
-$ sudo easeovs create --config src/github.com/itisnotdone/easeovs/template/multiple_region.yml
-ovs-vsctl add-br argn-f01
-ovs-vsctl add-br argn-f01-10 argn-f01 10
-===============>> network_config for bm-switch
-Generating /etc/network/interfaces.d/argn-f01-10.cfg
-ifup argn-f01-10
-ovs-vsctl add-br argn-f01-11 argn-f01 11
-===============>> network_config for ipmi
-Generating /etc/network/interfaces.d/argn-f01-11.cfg
-ifup argn-f01-11
-===============>> network_config for bm-server
-Generating /etc/network/interfaces.d/argn-f01.cfg
-ifup argn-f01
-ovs-vsctl add-br argn-f01-13 argn-f01 13
-===============>> network_config for infra-svc
-Generating /etc/network/interfaces.d/argn-f01-13.cfg
-ifup argn-f01-13
-ovs-vsctl add-br argn-f01-14 argn-f01 14
-===============>> network_config for k8s
-Generating /etc/network/interfaces.d/argn-f01-14.cfg
-ifup argn-f01-14
-ovs-vsctl add-br argn-f01-18 argn-f01 18
-===============>> network_config for os-admin
-Generating /etc/network/interfaces.d/argn-f01-18.cfg
-ifup argn-f01-18
-ovs-vsctl add-br argn-f01-19 argn-f01 19
-===============>> network_config for os-public
-Generating /etc/network/interfaces.d/argn-f01-19.cfg
-ifup argn-f01-19
-ovs-vsctl add-br argn-f01-116 argn-f01 116
-===============>> network_config for os-floating
-Generating /etc/network/interfaces.d/argn-f01-116.cfg
-ifup argn-f01-116
-ovs-vsctl add-br argn-f01-1100 argn-f01 1100
-===============>> network_config for os-tunnel
-Generating /etc/network/interfaces.d/argn-f01-1100.cfg
-ifup argn-f01-1100
-ovs-vsctl add-br argn-f01-1101 argn-f01 1101
-===============>> network_config for ceph-cluster
-Generating /etc/network/interfaces.d/argn-f01-1101.cfg
-ifup argn-f01-1101
-ovs-vsctl add-br brgn-f01
-ovs-vsctl add-br brgn-f01-164 brgn-f01 164
-===============>> network_config for bm-switch
-Generating /etc/network/interfaces.d/brgn-f01-164.cfg
-ifup brgn-f01-164
-ovs-vsctl add-br brgn-f01-165 brgn-f01 165
-===============>> network_config for ipmi
-Generating /etc/network/interfaces.d/brgn-f01-165.cfg
-ifup brgn-f01-165
-===============>> network_config for bm-server
-Generating /etc/network/interfaces.d/brgn-f01.cfg
-ifup brgn-f01
-ovs-vsctl add-br brgn-f01-167 brgn-f01 167
-===============>> network_config for infra-svc
-Generating /etc/network/interfaces.d/brgn-f01-167.cfg
-ifup brgn-f01-167
-ovs-vsctl add-br brgn-f01-168 brgn-f01 168
-===============>> network_config for k8s
-Generating /etc/network/interfaces.d/brgn-f01-168.cfg
-ifup brgn-f01-168
-ovs-vsctl add-br brgn-f01-172 brgn-f01 172
-===============>> network_config for os-admin
-Generating /etc/network/interfaces.d/brgn-f01-172.cfg
-ifup brgn-f01-172
-ovs-vsctl add-br brgn-f01-173 brgn-f01 173
-===============>> network_config for os-public
-Generating /etc/network/interfaces.d/brgn-f01-173.cfg
-ifup brgn-f01-173
-ovs-vsctl add-br brgn-f01-180 brgn-f01 180
-===============>> network_config for os-floating
-Generating /etc/network/interfaces.d/brgn-f01-180.cfg
-ifup brgn-f01-180
-ovs-vsctl add-br brgn-f01-1200 brgn-f01 1200
-===============>> network_config for os-tunnel
-Generating /etc/network/interfaces.d/brgn-f01-1200.cfg
-ifup brgn-f01-1200
-ovs-vsctl add-br brgn-f01-1201 brgn-f01 1201
-===============>> network_config for ceph-cluster
-Generating /etc/network/interfaces.d/brgn-f01-1201.cfg
-ifup brgn-f01-1201
+$ sudo easeovs create --config src/github.com/itisnotdone/easeovs/template/single_region.yml
 
 # to destroy the virtual network
+$ sudo easeovs destroy --config ~/go/src/github.com/itisnotdone/easeovs/template/single_region.yml
 
-$ sudo easeovs destroy --config ~/go/src/github.com/itisnotdone/easeovs/template/multiple_region.yml
-ifdown argn-f01-10
-ovs-vsctl del-br argn-f01-10
-Removing /etc/network/interfaces.d/argn-f01-10.cfg
-ifdown argn-f01-11
-ovs-vsctl del-br argn-f01-11
-Removing /etc/network/interfaces.d/argn-f01-11.cfg
-ifdown argn-f01-13
-ovs-vsctl del-br argn-f01-13
-Removing /etc/network/interfaces.d/argn-f01-13.cfg
-ifdown argn-f01-14
-ovs-vsctl del-br argn-f01-14
-Removing /etc/network/interfaces.d/argn-f01-14.cfg
-ifdown argn-f01-18
-ovs-vsctl del-br argn-f01-18
-Removing /etc/network/interfaces.d/argn-f01-18.cfg
-ifdown argn-f01-19
-ovs-vsctl del-br argn-f01-19
-Removing /etc/network/interfaces.d/argn-f01-19.cfg
-ifdown argn-f01-116
-ovs-vsctl del-br argn-f01-116
-Removing /etc/network/interfaces.d/argn-f01-116.cfg
-ifdown argn-f01-1100
-ovs-vsctl del-br argn-f01-1100
-Removing /etc/network/interfaces.d/argn-f01-1100.cfg
-ifdown argn-f01-1101
-ovs-vsctl del-br argn-f01-1101
-Removing /etc/network/interfaces.d/argn-f01-1101.cfg
-ifdown argn-f01
-ovs-vsctl del-br argn-f01
-Removing /etc/network/interfaces.d/argn-f01.cfg
-ifdown brgn-f01-164
-ovs-vsctl del-br brgn-f01-164
-Removing /etc/network/interfaces.d/brgn-f01-164.cfg
-ifdown brgn-f01-165
-ovs-vsctl del-br brgn-f01-165
-Removing /etc/network/interfaces.d/brgn-f01-165.cfg
-ifdown brgn-f01-167
-ovs-vsctl del-br brgn-f01-167
-Removing /etc/network/interfaces.d/brgn-f01-167.cfg
-ifdown brgn-f01-168
-ovs-vsctl del-br brgn-f01-168
-Removing /etc/network/interfaces.d/brgn-f01-168.cfg
-ifdown brgn-f01-172
-ovs-vsctl del-br brgn-f01-172
-Removing /etc/network/interfaces.d/brgn-f01-172.cfg
-ifdown brgn-f01-173
-ovs-vsctl del-br brgn-f01-173
-Removing /etc/network/interfaces.d/brgn-f01-173.cfg
-ifdown brgn-f01-180
-ovs-vsctl del-br brgn-f01-180
-Removing /etc/network/interfaces.d/brgn-f01-180.cfg
-ifdown brgn-f01-1200
-ovs-vsctl del-br brgn-f01-1200
-Removing /etc/network/interfaces.d/brgn-f01-1200.cfg
-ifdown brgn-f01-1201
-ovs-vsctl del-br brgn-f01-1201
-Removing /etc/network/interfaces.d/brgn-f01-1201.cfg
-ifdown brgn-f01
-ovs-vsctl del-br brgn-f01
-Removing /etc/network/interfaces.d/brgn-f01.cfg
+# `generate` command will generate network and device configuration for MAAS container and XML network definition for libvirt
+easeovs generate --config ~/go/src/github.com/itisnotdone/easeovs/template/single_region.yml --host-id 2
+ls
+cloudinit_net_argn.yml  cloudinit_net_default.yml  virsh_net_argn_f01.xml  virsh_net_default_f01.xml
 
-# to generate network and device configuration for MAAS container
-easeovs generate --config /home/ubuntu/go/src/github.com/itisnotdone/easeovs/template/multiple_region.yml --host-id 2
-find . -maxdepth 1 -name "*.yml"
-./network_argn.yml
-./network_brgn.yml
-```
-
-## sudo command with GOBIN
-Add $GOBIN path at the end of following line in /etc/sudoers file.
-```bash
-Defaults        secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/home/ubuntu/go/bin"
 ```
 
 ## Reference
