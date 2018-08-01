@@ -54,13 +54,13 @@ GLOBAL OPTIONS:
 source /etc/network/interfaces.d/*.cfg
 
 # to build virtual network as defined
-$ sudo easeovs create --config src/github.com/itisnotdone/easeovs/template/single_region.yml
+$ sudo easeovs create --config $GOPATH/src/github.com/itisnotdone/easeovs/template/single_region.yml
 
 # to destroy the virtual network
-$ sudo easeovs destroy --config ~/go/src/github.com/itisnotdone/easeovs/template/single_region.yml
+$ sudo easeovs destroy --config $GOPATH/src/github.com/itisnotdone/easeovs/template/single_region.yml
 
 # `generate` command will generate network and device configuration for MAAS container and XML network definition for libvirt
-easeovs generate --config ~/go/src/github.com/itisnotdone/easeovs/template/single_region.yml --host-id 2
+easeovs generate --config $GOPATH/src/github.com/itisnotdone/easeovs/template/single_region.yml --host-id 2
 ls
 cloudinit_net_argn.yml  cloudinit_net_default.yml  virsh_net_argn_f01.xml  virsh_net_default_f01.xml
 
