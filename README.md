@@ -64,6 +64,13 @@ easeovs generate --config $GOPATH/src/github.com/itisnotdone/easeovs/template/si
 ls
 cloudinit_net_argn.yml  cloudinit_net_default.yml  virsh_net_argn_f01.xml  virsh_net_default_f01.xml
 
+# to create a lxc container to build a MAAS
+gogetit create argn-maas --no-maas -f cloudinit_net_argn.yml --maas-on-lxc
+
+# to define a virtual network for libvirt
+virsh net-define virsh_net_argn_f01.xml
+virsh net-start argn-f01
+virsh net-autostart argn-f01
 ```
 
 ## Reference
