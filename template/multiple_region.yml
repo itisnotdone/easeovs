@@ -1,7 +1,7 @@
 region:
   -
     name: default
-    domain: default.dev
+    domain: default.don
     mtu: 9000
     fabric:
       -
@@ -26,7 +26,7 @@ region:
                 comment: for some purpose
   -
     name: argn
-    domain: argn.dev
+    domain: argn.don
     mtu: 9000
     fabric:
       -
@@ -94,7 +94,7 @@ region:
             desc: ceph cluster
   -
     name: brgn
-    domain: brgn.dev
+    domain: brgn.don
     mtu: 9000
     fabric:
       -
